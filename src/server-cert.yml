@@ -1,0 +1,26 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: photoatom-postgres-server-cert
+  namespace: photoatom-postgres-database
+spec:
+  secretName: photoatom-postgres-server-cert
+  secretTemplate:
+    labels:
+      cnpg.io/reload: ""
+  usages:
+    - server auth
+  dnsNames:
+    - postgres-rw
+    - postgres-rw.photoatom-postgres-database
+    - postgres-rw.photoatom-postgres-database.svc
+    - postgres-r
+    - postgres-r.photoatom-postgres-database
+    - postgres-r.photoatom-postgres-database.svc
+    - postgres-ro
+    - postgres-ro.photoatom-postgres-database
+    - postgres-ro.photoatom-postgres-database.svc
+  issuerRef:
+    name: photoatom-postgres-server-ca-issuer
+    kind: Issuer
+    group: cert-manager.io

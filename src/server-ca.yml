@@ -1,0 +1,19 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: photoatom-postgres-server-ca
+  namespace: photoatom-postgres-database
+  labels:
+    app: pg
+spec:
+  isCA: true
+  commonName: photoatom-postgres-server-ca
+  secretName: photoatom-postgres-server-ca-tls
+  duration: 70128h
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  issuerRef:
+    name: photoatom-self-signed-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io

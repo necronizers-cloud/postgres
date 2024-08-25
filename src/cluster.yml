@@ -1,0 +1,80 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgres
+  namespace: photoatom-postgres-database
+  labels:
+    app: pg
+spec:
+  description: "PostgreSQL Cluster for all applications in PhotoAtom"
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.2
+
+  enableSuperuserAccess: true
+
+  instances: 3
+  startDelay: 300
+  primaryUpdateStrategy: unsupervised
+
+  bootstrap:
+    initdb:
+      database: application
+      postInitSQL:
+        - CREATE USER keycloak
+        - CREATE DATABASE keycloak OWNER keycloak
+        - CREATE USER photoatom
+        - CREATE DATABASE photoatom OWNER photoatom
+
+  managed:
+    roles:
+      - connectionLimit: -1
+        ensure: present
+        inherit: true
+        name: keycloak
+        comment: Keycloak User for PostgreSQL
+        login: true
+        superuser: false
+        createdb: true
+        createrole: true
+        replication: false
+        bypassrls: false
+        passwordSecret:
+          name: photoatom-postgres-keycloak-creds
+
+      - connectionLimit: -1
+        ensure: present
+        inherit: true
+        name: photoatom
+        comment: PhotoAtom User for PostgreSQL
+        login: true
+        superuser: false
+        createdb: true
+        createrole: true
+        replication: false
+        bypassrls: false
+        passwordSecret:
+          name: photoatom-postgres-photoatom-creds
+
+  resources:
+    requests:
+      memory: "1Gi"
+      cpu: "500m"
+    limits:
+      memory: "1Gi"
+      cpu: "500m"
+
+  storage:
+    size: 5Gi
+    pvcTemplate:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi
+      storageClassName: csi-hostpath-sc
+      volumeMode: Filesystem
+
+  certificates:
+    serverTLSSecret: photoatom-postgres-server-cert
+    serverCASecret: photoatom-postgres-server-ca-tls
+    replicationTLSSecret: photoatom-postgres-client-cert
+    clientCASecret: photoatom-postgres-client-ca-tls
