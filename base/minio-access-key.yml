@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: photoatom-postgres-minio-access-key
+  namespace: photoatom-postgres-database
+  labels:
+    app: pg
+type: Opaque
+data:
+  MINIO_ACCESS_KEY: cG9zdGdyZXMtYWNjZXNzCg==
+  MINIO_ACCESS_SECRET: d0hSTy94dTZGZTJHSTc3TmF0VTFwUT09Cg==
