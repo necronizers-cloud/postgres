@@ -78,3 +78,27 @@ spec:
     serverCASecret: photoatom-postgres-server-ca-tls
     replicationTLSSecret: photoatom-postgres-client-cert
     clientCASecret: photoatom-postgres-client-ca-tls
+
+  backup:
+    volumeSnapshot:
+      className: csi-hostpath-snapclass
+    barmanObjectStore:
+      destinationPath: s3://postgres/
+      endpointURL: https://minio-hl.photoatom-object-storage.svc.cluster.local:9000
+      endpointCA:
+        name: photoatom-postgres-minio-ca
+        key: ca.crt
+      s3Credentials:
+        accessKeyId:
+          name: photoatom-postgres-minio-access-key
+          key: MINIO_ACCESS_KEY
+        secretAccessKey:
+          name: photoatom-postgres-minio-access-key
+          key: MINIO_ACCESS_SECRET
+      wal:
+        compression: gzip
+      data:
+        additionalCommandArgs:
+          - "--min-chunk-size=5MB"
+          - "--read-timeout=60"
+          - "-vv"
