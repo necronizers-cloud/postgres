@@ -17,5 +17,10 @@ sed -i "s|CONFIG_KEYCLOAK_CREDS_PASSWORD|$(echo $KEYCLOAK_CREDS_PASSWORD | base6
 
 kubectl apply -f keycloak-creds-secret.yml
 
-echo "Setting up Postgres Cluster..."
+echo "Setting up Postgres Cluster and sleeping for 10 minutes..."
 kubectl apply -f cluster.yml
+sleep 600
+
+echo "Generating client certificates for Keycloak and PhotoAtom..."
+kubectl cnpg certificate photoatom-keycloak-client-certs --cnpg-cluster postgres --cnpg-user keycloak --namespace photoatom-postgres-database
+kubectl cnpg certificate photoatom-photoatom-client-certs --cnpg-cluster postgres --cnpg-user photoatom --namespace photoatom-postgres-database
