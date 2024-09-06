@@ -70,7 +70,7 @@ spec:
       resources:
         requests:
           storage: 1Gi
-      storageClassName: csi-hostpath-sc
+      storageClassName: local-path
       volumeMode: Filesystem
 
   backup:
