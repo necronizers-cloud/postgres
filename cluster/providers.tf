@@ -8,10 +8,9 @@ terraform {
 
   backend "kubernetes" {
     secret_suffix = "cluster.postgres"
-    config_path   = "~/.kube/config"
   }
 }
 
 provider "kubernetes" {
-  config_path = "~/.kube/config"
+
 }
