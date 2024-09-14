@@ -16,12 +16,11 @@ terraform {
 
   backend "kubernetes" {
     secret_suffix = "secrets.postgres"
-    config_path   = "~/.kube/config"
   }
 }
 
 provider "kubernetes" {
-  config_path = "~/.kube/config"
+
 }
 
 provider "null" {

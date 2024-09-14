@@ -1,0 +1,70 @@
+name: CloudNative PG Cluster Deployment onto Self Hosted K3d Cluster
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/**
+      - bug/**
+    paths:
+      - certificates/**
+      - namespace/**
+      - secrets/**
+      - cluster/**
+  pull_request:
+    paths:
+      - certificates/**
+      - namespace/**
+      - secrets/**
+      - cluster/**
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - closed
+
+jobs:
+  namespace_deploy:
+    name: CloudNative PG Namespace Deployment onto Self Hosted K3d Cluster
+    uses: PhotoAtom/automations/.github/workflows/tofu-deploy.yml@main
+    with:
+      deployment_name: CloudNative PG Namespace
+      folder_path: namespace
+      runners: photoatom
+    secrets:
+      KUBECONFIG: ${{ secrets.KUBECONFIG }}
+
+  certificates_deploy:
+    needs: [namespace_deploy]
+    name: CloudNative PG Certificates Deployment onto Self Hosted K3d Cluster
+    uses: PhotoAtom/automations/.github/workflows/tofu-deploy.yml@main
+    with:
+      deployment_name: CloudNative PG Certificates
+      folder_path: certificates
+      runners: photoatom
+    secrets:
+      KUBECONFIG: ${{ secrets.KUBECONFIG }}
+
+  secrets_deploy:
+    needs: [certificates_deploy]
+    name: CloudNative PG Secrets Deployment onto Self Hosted K3d Cluster
+    uses: PhotoAtom/automations/.github/workflows/tofu-deploy.yml@main
+    with:
+      deployment_name: CloudNative PG Secrets
+      folder_path: secrets
+      runners: photoatom
+    secrets:
+      KUBECONFIG: ${{ secrets.KUBECONFIG }}
+
+  cluster_deploy:
+    needs: [secrets_deploy]
+    name: CloudNative PG Cluster Deployment onto Self Hosted K3d Cluster
+    uses: PhotoAtom/automations/.github/workflows/tofu-deploy.yml@main
+    with:
+      deployment_name: CloudNative PG Cluster
+      folder_path: cluster
+      runners: photoatom
+    secrets:
+      KUBECONFIG: ${{ secrets.KUBECONFIG }}
+
