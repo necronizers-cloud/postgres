@@ -126,5 +126,6 @@ resource "kubernetes_manifest" "cluster" {
     }
   }
 
+  // Fields to ignore changes for
   computed_fields = ["spec.managed.roles[0].replication", "spec.managed.roles[0].superuser", "spec.managed.roles[0].bypassrls", "spec.managed.roles[1].bypassrls", "spec.managed.roles[1].superuser", "spec.managed.roles[1].replication"]
 }

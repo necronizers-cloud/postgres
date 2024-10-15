@@ -1,47 +1,8 @@
-// Generating MinIO Access Key for Postgres Backups
-resource "random_password" "minio_access_secret" {
-  length           = 16
-  lower            = true
-  numeric          = true
-  special          = true
-  override_special = "-_*"
-  min_special      = 2
-}
-
-data "kubernetes_secret" "minio_postgres_credentials" {
+// Fetching MinIO Access Key for Postgres Backups
+data "kubernetes_secret" "postgres_backups_access_credentials" {
   metadata {
-    name      = var.postgres_user_name
+    name      = var.postgres_backups_access_credentials
     namespace = var.minio_namespace
-  }
-}
-
-locals {
-  postgres_user                     = nonsensitive(data.kubernetes_secret.minio_postgres_credentials.data["CONSOLE_ACCESS_KEY"])
-  postgres_password                 = nonsensitive(data.kubernetes_secret.minio_postgres_credentials.data["CONSOLE_SECRET_KEY"])
-  postgres_service_account_password = nonsensitive(random_password.minio_access_secret.result)
-}
-
-resource "null_resource" "create_service_account" {
-  triggers = {
-    "create_service_account" : true
-  }
-
-  provisioner "local-exec" {
-    command = <<EOT
-kubectl port-forward svc/minio-hl 9000 -n minio &
-sleep 3
-PROCESS_NUMBER=$(ps | grep kubectl | xargs | cut -f1 -d" ")
-
-mc alias set photoatom https://localhost:9000 "${data.kubernetes_secret.minio_postgres_credentials.data["CONSOLE_ACCESS_KEY"]}" "${data.kubernetes_secret.minio_postgres_credentials.data["CONSOLE_SECRET_KEY"]}" --insecure
-
-mc admin user svcacct add \
-   --access-key "${var.postgres_service_account_name}" \
-   --secret-key "${random_password.minio_access_secret.result}" \
-   photoatom "${data.kubernetes_secret.minio_postgres_credentials.data["CONSOLE_ACCESS_KEY"]}" \
-   --insecure
-
-kill -9 "$PROCESS_NUMBER"
-    EOT
   }
 }
 
@@ -56,14 +17,9 @@ resource "kubernetes_secret" "minio_access_keys" {
     }
   }
 
-  data = {
-    "MINIO_ACCESS_KEY"    = var.postgres_service_account_name
-    "MINIO_ACCESS_SECRET" = random_password.minio_access_secret.result
-  }
+  data = data.kubernetes_secret.postgres_backups_access_credentials.data
 
   type = "Opaque"
-
-  depends_on = [null_resource.create_service_account]
 }
 
 // Passwords for PostgreSQL Cluster Users

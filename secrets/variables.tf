@@ -8,10 +8,11 @@ variable "minio_namespace" {
   description = "Namespace to be used for deploying MinIO Tenant and related resources."
 }
 
-variable "postgres_user_name" {
-  default     = "postgres-user"
-  description = "Name for the PostgreSQL user secret"
+variable "postgres_backups_access_credentials" {
+  default     = "postgres-access-key"
+  description = "Secret name for PG Backups Access Keys"
 }
+
 
 variable "postgres_service_account_name" {
   default     = "postgres-access"
