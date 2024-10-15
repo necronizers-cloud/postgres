@@ -11,12 +11,14 @@ on:
       - namespace/**
       - secrets/**
       - cluster/**
+      - .github/workflows/tofu-deploy.yml
   pull_request:
     paths:
       - certificates/**
       - namespace/**
       - secrets/**
       - cluster/**
+      - .github/workflows/tofu-deploy.yml
     branches:
       - main
     types:
@@ -64,6 +66,25 @@ jobs:
     with:
       deployment_name: CloudNative PG Cluster
       folder_path: cluster
+      runners: photoatom
+    secrets:
+      KUBECONFIG: ${{ secrets.KUBECONFIG }}
+
+  ssl_certs_deploy:
+    needs: [cluster_deploy]
+    name: CloudNative PG SSL Certificates Deployment onto Self Hosted K3d Cluster
+    uses: PhotoAtom/automations/.github/workflows/execute-script.yml@main
+    with:
+      deployment_name: SSL Certificates
+      shell_script: |
+
+        # Sleep till cluster is ready for generating SSL certificates
+        echo "Sleeping till cluster is ready for generating SSL certificates..."
+        sleep 180
+
+        # Execute script for generating SSL certificates
+        chmod +x .github/scripts/ssl-certificates.sh
+        bash .github/scripts/ssl-certificates.sh
       runners: photoatom
     secrets:
       KUBECONFIG: ${{ secrets.KUBECONFIG }}
