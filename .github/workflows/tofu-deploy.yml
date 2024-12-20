@@ -34,8 +34,8 @@ jobs:
       deployment_name: CloudNative PG Namespace
       folder_path: namespace
       runners: photoatom
-    secrets:
-      KUBECONFIG: ${{ secrets.KUBECONFIG }}
+    secrets: inherit
+      
 
   certificates_deploy:
     needs: [namespace_deploy]
@@ -45,8 +45,8 @@ jobs:
       deployment_name: CloudNative PG Certificates
       folder_path: certificates
       runners: photoatom
-    secrets:
-      KUBECONFIG: ${{ secrets.KUBECONFIG }}
+    secrets: inherit
+      
 
   secrets_deploy:
     needs: [certificates_deploy]
@@ -56,8 +56,8 @@ jobs:
       deployment_name: CloudNative PG Secrets
       folder_path: secrets
       runners: photoatom
-    secrets:
-      KUBECONFIG: ${{ secrets.KUBECONFIG }}
+    secrets: inherit
+      
 
   cluster_deploy:
     needs: [secrets_deploy]
@@ -67,8 +67,8 @@ jobs:
       deployment_name: CloudNative PG Cluster
       folder_path: cluster
       runners: photoatom
-    secrets:
-      KUBECONFIG: ${{ secrets.KUBECONFIG }}
+    secrets: inherit
+      
 
   ssl_certs_deploy:
     needs: [cluster_deploy]
@@ -86,6 +86,6 @@ jobs:
         chmod +x .github/scripts/ssl-certificates.sh
         bash .github/scripts/ssl-certificates.sh
       runners: photoatom
-    secrets:
-      KUBECONFIG: ${{ secrets.KUBECONFIG }}
+    secrets: inherit
+      
 
