@@ -59,7 +59,7 @@ resource "kubernetes_manifest" "cluster" {
       "description"           = "PostgreSQL Cluster for all applications in PhotoAtom"
       "enableSuperuserAccess" = true
       "imageName"             = "ghcr.io/cloudnative-pg/postgresql:16.2"
-      "instances"             = 3
+      "instances"             = 1
       "managed" = {
         "roles" = [
           {
