@@ -24,4 +24,4 @@ function generate_ssl_certificates {
 
 }
 
-generate_ssl_certificates "keycloak photoatom"
+generate_ssl_certificates "keycloak app"

@@ -23,7 +23,7 @@ resource "kubernetes_secret" "minio_access_keys" {
 }
 
 // Passwords for PostgreSQL Cluster Users
-resource "random_password" "photoatom_password" {
+resource "random_password" "cloud_password" {
   length           = 16
   lower            = true
   numeric          = true
@@ -41,9 +41,9 @@ resource "random_password" "keycloak_password" {
   min_special      = 2
 }
 
-resource "kubernetes_secret" "photoatom_database_credentials" {
+resource "kubernetes_secret" "cloud_database_credentials" {
   metadata {
-    name      = var.photoatom_database_credentials_name
+    name      = var.cloud_database_credentials_name
     namespace = var.namespace
 
     labels = {
@@ -53,8 +53,8 @@ resource "kubernetes_secret" "photoatom_database_credentials" {
   }
 
   data = {
-    "username" = "photoatom"
-    "password" = random_password.photoatom_password.result
+    "username" = "cloud"
+    "password" = random_password.cloud_password.result
   }
 
   type = "kubernetes.io/basic-auth"

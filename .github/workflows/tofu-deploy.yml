@@ -29,51 +29,51 @@ on:
 jobs:
   namespace_deploy:
     name: CloudNative PG Namespace Deployment onto Self Hosted K3d Cluster
-    uses: PhotoAtom/automations/.github/workflows/tofu-deploy.yml@main
+    uses: necronizers-cloud/automations/.github/workflows/tofu-deploy.yml@main
     with:
       deployment_name: CloudNative PG Namespace
       folder_path: namespace
-      runners: photoatom
+      runners: cloud
     secrets: inherit
       
 
   certificates_deploy:
     needs: [namespace_deploy]
     name: CloudNative PG Certificates Deployment onto Self Hosted K3d Cluster
-    uses: PhotoAtom/automations/.github/workflows/tofu-deploy.yml@main
+    uses: necronizers-cloud/automations/.github/workflows/tofu-deploy.yml@main
     with:
       deployment_name: CloudNative PG Certificates
       folder_path: certificates
-      runners: photoatom
+      runners: cloud
     secrets: inherit
       
 
   secrets_deploy:
     needs: [certificates_deploy]
     name: CloudNative PG Secrets Deployment onto Self Hosted K3d Cluster
-    uses: PhotoAtom/automations/.github/workflows/tofu-deploy.yml@main
+    uses: necronizers-cloud/automations/.github/workflows/tofu-deploy.yml@main
     with:
       deployment_name: CloudNative PG Secrets
       folder_path: secrets
-      runners: photoatom
+      runners: cloud
     secrets: inherit
       
 
   cluster_deploy:
     needs: [secrets_deploy]
     name: CloudNative PG Cluster Deployment onto Self Hosted K3d Cluster
-    uses: PhotoAtom/automations/.github/workflows/tofu-deploy.yml@main
+    uses: necronizers-cloud/automations/.github/workflows/tofu-deploy.yml@main
     with:
       deployment_name: CloudNative PG Cluster
       folder_path: cluster
-      runners: photoatom
+      runners: cloud
     secrets: inherit
       
 
   ssl_certs_deploy:
     needs: [cluster_deploy]
     name: CloudNative PG SSL Certificates Deployment onto Self Hosted K3d Cluster
-    uses: PhotoAtom/automations/.github/workflows/execute-script.yml@main
+    uses: necronizers-cloud/automations/.github/workflows/execute-script.yml@main
     with:
       deployment_name: SSL Certificates
       shell_script: |
@@ -85,7 +85,7 @@ jobs:
         # Execute script for generating SSL certificates
         chmod +x .github/scripts/ssl-certificates.sh
         bash .github/scripts/ssl-certificates.sh
-      runners: photoatom
+      runners: cloud
     secrets: inherit
       
 

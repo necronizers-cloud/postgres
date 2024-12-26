@@ -28,9 +28,9 @@ variable "minio_access_credentials" {
   description = "Secret name for MinIO Access Keys"
 }
 
-variable "photoatom_database_credentials_name" {
-  default     = "photoatom-database-credentials"
-  description = "Database Credentials Secret Name for PhotoAtom Application"
+variable "cloud_database_credentials_name" {
+  default     = "cloud-database-credentials"
+  description = "Database Credentials Secret Name for Application"
 }
 
 variable "keycloak_database_credentials_name" {
