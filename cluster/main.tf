@@ -51,8 +51,8 @@ resource "kubernetes_manifest" "cluster" {
           "postInitSQL" = [
             "CREATE USER keycloak",
             "CREATE DATABASE keycloak OWNER keycloak",
-            "CREATE USER photoatom",
-            "CREATE DATABASE photoatom OWNER photoatom",
+            "CREATE USER cloud",
+            "CREATE DATABASE cloud OWNER cloud",
           ]
         }
       }
@@ -80,16 +80,16 @@ resource "kubernetes_manifest" "cluster" {
           },
           {
             "bypassrls"       = false
-            "comment"         = "PhotoAtom User for PostgreSQL"
+            "comment"         = "Cloud User for PostgreSQL"
             "connectionLimit" = -1
             "createdb"        = true
             "createrole"      = true
             "ensure"          = "present"
             "inherit"         = true
             "login"           = true
-            "name"            = "photoatom"
+            "name"            = "cloud"
             "passwordSecret" = {
-              "name" = var.photoatom_database_credentials_name
+              "name" = var.cloud_database_credentials_name
             }
             "replication" = false
             "superuser"   = false
