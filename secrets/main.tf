@@ -53,7 +53,7 @@ resource "kubernetes_secret" "cloud_database_credentials" {
   }
 
   data = {
-    "username" = "photoatom"
+    "username" = "cloud"
     "password" = random_password.cloud_password.result
   }
 
